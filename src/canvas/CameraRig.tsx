@@ -14,22 +14,23 @@ const CameraRig = ({ children }: CameraRigProps) => {
   const snap = useSnapshot(state);
 
   useFrame((state, delta) => {
-    const isBreakpoint = window.matchMedia('(min-width: 1260px)').matches;
-    const isMobile = window.matchMedia('(max-width: 640px)').matches;
+    const windowWidth = window.innerWidth;
+    const isBreakpoint = windowWidth <= 1260;
+    const isMobile = windowWidth <= 640;
 
     //set inital postion of the model
-    let targetPostion: [number, number, number] = [-0.4, 0, 2];
+    let targetPosition: [number, number, number] = [-0.4, 0, 2];
 
     if (snap.intro) {
-      if (isBreakpoint) targetPostion = [0, 0, 2];
-      if (isMobile) targetPostion = [0, 0.2, 2.5];
+      if (isBreakpoint) targetPosition = [0.1, 0, 2];
+      if (isMobile) targetPosition = [0, 0.2, 2.5];
     } else {
-      if (isMobile) targetPostion = [0, 0, 2.5];
-      else targetPostion = [0, 0, 2];
+      if (isMobile) targetPosition = [0, 0, 2.5];
+      else targetPosition = [0, 0, 2];
     }
 
     //set camera postion
-    easing.damp3(state.camera.position, targetPostion, 0.25, delta);
+    easing.damp3(state.camera.position, targetPosition, 0.25, delta);
 
     //Set model rotation
     group.current &&
