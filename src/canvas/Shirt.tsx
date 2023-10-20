@@ -4,10 +4,11 @@ import { useFrame } from '@react-three/fiber';
 import { Decal, useGLTF, useTexture } from '@react-three/drei';
 
 import state from '../store';
-import { rotate } from 'maath/dist/declarations/src/buffer';
 
 const Shirt = () => {
   const snap = useSnapshot(state);
+
+  //@ts-ignore
   const { nodes, materials } = useGLTF('/shirt_baked.glb');
   const logoTexture = useTexture(snap.logoDecal);
   const fullTexture = useTexture(snap.fullDecal);
