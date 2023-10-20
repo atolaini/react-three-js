@@ -37,8 +37,8 @@ const Home = () => {
           >
             <motion.div {...headTextAnimation}>
               <h1 className='head-text'>
-                LETS' <br className='xl:block hi]' />
-                DO IT
+                CREATE IT <br className='xl:block hi]' />
+                WEAR IT
               </h1>
             </motion.div>
             <motion.div
