@@ -23,7 +23,10 @@ const Customizer = () => {
   const [prompt, setPrompt] = useState('');
   const [generatingImg, setGeneratingImg] = useState(false);
   const [activeEditorTab, setActiveEditorTab] = useState('');
-  const [activeFilterTab, setActiveFilterTab] = useState({
+  const [activeFilterTab, setActiveFilterTab] = useState<{
+    logoShirt: boolean;
+    stylishShirt: boolean;
+  }>({
     logoShirt: true,
     stylishShirt: false,
   });
@@ -40,10 +43,60 @@ const Customizer = () => {
       case 'colorpicker':
         return <ColorPicker />;
       case 'filepicker':
-        return <FilePicker />;
+        return (
+          <FilePicker
+            file={file}
+            setFile={setFile}
+            readFile={readFile}
+          />
+        );
       default:
         return null;
     }
+  };
+
+  const handleDecals = (type: keyof typeof DecalTypes, result: string) => {
+    const decalType = DecalTypes[type];
+
+    if ('stateProperty' in decalType && 'filterTab' in decalType) {
+      state[decalType.stateProperty as keyof typeof state] = result;
+
+      if (
+        !activeFilterTab[decalType.filterTab as keyof typeof activeFilterTab]
+      ) {
+        handleActiveFilterTab(
+          decalType.filterTab as keyof typeof activeFilterTab
+        );
+      }
+    }
+  };
+
+  const handleActiveFilterTab = (tabName: string) => {
+    switch (tabName) {
+      case 'logoShirt':
+        state.isLogoTexture = !activeFilterTab[tabName];
+        break;
+      case 'stylishShirt':
+        state.isFullTexture = !activeFilterTab[tabName];
+        break;
+      default:
+        state.isFullTexture = true;
+        state.isLogoTexture = false;
+    }
+
+    setActiveFilterTab((prevState) => {
+      return {
+        ...prevState,
+        [tabName]: !prevState[tabName],
+      };
+    });
+  };
+
+  const readFile = (type) => {
+    reader(file).then((result) => {
+      handleDecals(type, result);
+      setActiveEditorTab('');
+    });
   };
 
   const activeTabHandler = (tabName: string) => () => {
@@ -92,8 +145,10 @@ const Customizer = () => {
                 key={tab.name}
                 tab={tab}
                 isFilterTab
-                isActiveTab=''
-                handleClick={() => {}}
+                isActiveTab={activeFilterTab[tab.name]}
+                handleClick={() => {
+                  handleActiveFilterTab(tab.name);
+                }}
               />
             ))}
           </motion.div>

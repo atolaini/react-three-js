@@ -4,7 +4,7 @@ import state from '../store';
 interface TabProps {
   tab: { name: string; icon: string };
   isFilterTab?: boolean;
-  isActiveTab?: string;
+  isActiveTab?: boolean;
   handleClick: () => void;
 }
 
